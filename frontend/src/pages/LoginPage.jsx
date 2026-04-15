@@ -10,14 +10,11 @@ const LoginPage = () => {
   const { login, register } = useAuth();
   const navigate = useNavigate();
 
-  // 'signin' | 'signup'
   const [tab, setTab] = useState('signin');
 
-  // ── Sign In state ─────────────────────────────────────────
   const [loginData, setLoginData] = useState({ email: '', password: '' });
   const [loginShowPass, setLoginShowPass] = useState(false);
 
-  // ── Sign Up state ─────────────────────────────────────────
   const [signupData, setSignupData] = useState({
     name: '', email: '', password: '', confirmPassword: ''
   });
@@ -28,7 +25,6 @@ const LoginPage = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  // ── Handlers ──────────────────────────────────────────────
   const switchTab = (t) => {
     setTab(t);
     setError('');
@@ -46,7 +42,6 @@ const LoginPage = () => {
     setSignupData(p => ({ ...p, [e.target.name]: e.target.value }));
   };
 
-  // ── Sign In submit ────────────────────────────────────────
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
     if (!loginData.email || !loginData.password) {
@@ -65,7 +60,6 @@ const LoginPage = () => {
     }
   };
 
-  // ── Sign Up validation ────────────────────────────────────
   const validateSignup = () => {
     const e = {};
     if (!signupData.name.trim() || signupData.name.trim().length < 2)
@@ -80,7 +74,6 @@ const LoginPage = () => {
     return Object.keys(e).length === 0;
   };
 
-  // ── Sign Up submit ────────────────────────────────────────
   const handleSignupSubmit = async (e) => {
     e.preventDefault();
     if (!validateSignup()) return;
@@ -96,20 +89,17 @@ const LoginPage = () => {
     }
   };
 
-  // ── Render ────────────────────────────────────────────────
   return (
     <div className="login-page">
       <div className="login-bg-orb login-bg-orb-1" />
       <div className="login-bg-orb login-bg-orb-2" />
 
       <div className="login-card">
-        {/* Logo */}
         <div className="login-logo">
           <div className="login-logo-icon"><MdShield /></div>
           <span className="login-logo-text">UserMS</span>
         </div>
 
-        {/* Tabs */}
         <div style={{
           display: 'flex',
           background: 'var(--color-surface-2)',
@@ -145,7 +135,6 @@ const LoginPage = () => {
           ))}
         </div>
 
-        {/* Global error */}
         {error && (
           <div className="alert alert-error" style={{ marginBottom: 'var(--space-4)' }}>
             <MdLock size={16} />
@@ -153,7 +142,6 @@ const LoginPage = () => {
           </div>
         )}
 
-        {/* ── SIGN IN FORM ── */}
         {tab === 'signin' && (
           <>
             <h1 className="login-title" style={{ marginBottom: 4 }}>Welcome back</h1>
@@ -236,14 +224,12 @@ const LoginPage = () => {
           </>
         )}
 
-        {/* ── SIGN UP FORM ── */}
         {tab === 'signup' && (
           <>
             <h1 className="login-title" style={{ marginBottom: 4 }}>Create an account</h1>
             <p className="login-subtitle">Join UserMS — it only takes a moment</p>
 
             <form onSubmit={handleSignupSubmit} noValidate>
-              {/* Name */}
               <div className="form-group">
                 <label className="form-label" htmlFor="signup-name">
                   Full Name <span className="required">*</span>
@@ -268,7 +254,6 @@ const LoginPage = () => {
                 {signupErrors.name && <div className="form-error">{signupErrors.name}</div>}
               </div>
 
-              {/* Email */}
               <div className="form-group">
                 <label className="form-label" htmlFor="signup-email">
                   Email Address <span className="required">*</span>
@@ -293,7 +278,6 @@ const LoginPage = () => {
                 {signupErrors.email && <div className="form-error">{signupErrors.email}</div>}
               </div>
 
-              {/* Password */}
               <div className="form-group">
                 <label className="form-label" htmlFor="signup-password">
                   Password <span className="required">*</span>
@@ -321,7 +305,6 @@ const LoginPage = () => {
                 {signupErrors.password && <div className="form-error">{signupErrors.password}</div>}
               </div>
 
-              {/* Confirm Password */}
               <div className="form-group">
                 <label className="form-label" htmlFor="signup-confirm">
                   Confirm Password <span className="required">*</span>

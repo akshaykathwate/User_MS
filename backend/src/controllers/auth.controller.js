@@ -10,7 +10,6 @@ const register = async (req, res) => {
       return res.status(409).json({ success: false, message: 'An account with this email already exists' });
     }
 
-    // Public registration always creates a 'user' role — no privilege escalation
     const user = await User.create({
       name,
       email,

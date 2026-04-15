@@ -1,11 +1,19 @@
 # UserMS — User Management System
 
-A full-stack **MERN** User Management System with Role-Based Access Control (RBAC), built for the Purple Merit Technologies MERN Stack Developer Intern Assessment.
+A full-stack **MERN** User Management System with Role-Based Access Control (RBAC)
 
 ## 🚀 Live Demo
 
-- **Frontend**: [https://your-app.vercel.app](https://your-app.vercel.app)
-- **Backend API**: [https://your-api.onrender.com](https://your-api.onrender.com)
+- **Frontend**: [https://user-ms-one.vercel.app](https://user-ms-one.vercel.app)
+
+### Demo Credentials
+
+| Role | Email | Password |
+|------|-------|----------|
+| Admin | admin@userms.com | Admin@123456 |
+| Manager | manager@userms.com | Manager@123456 |
+| User | user@userms.com | User@123456 |
+
 
 ## 📋 Features
 
@@ -67,7 +75,7 @@ assessment/
 │   │   │   ├── auth.routes.js
 │   │   │   └── user.routes.js
 │   │   ├── utils/
-│   │   │   └── seeder.js           # DB seeder
+│   │   │   └── seeder.js           
 │   │   └── server.js              # Express app entry
 │   ├── .env.example
 │   └── package.json
@@ -145,13 +153,7 @@ npm install
 npm run dev     # Start on http://localhost:5173
 ```
 
-### Demo Credentials
 
-| Role | Email | Password |
-|------|-------|----------|
-| Admin | admin@userms.com | Admin@123456 |
-| Manager | manager@userms.com | Manager@123456 |
-| User | user@userms.com | User@123456 |
 
 ## 📡 API Reference
 
@@ -234,7 +236,3 @@ npm run dev     # Start on http://localhost:5173
   updatedAt: Date (auto)
 }
 ```
-
-## 👨‍💻 Author
-
-Built for Purple Merit Technologies MERN Stack Intern Assessment.

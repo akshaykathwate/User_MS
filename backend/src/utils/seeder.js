@@ -10,7 +10,6 @@ const connectDB = async () => {
   console.log('MongoDB connected for seeding...');
 };
 
-// Only the admin is seeded. All other users register via POST /api/auth/register
 const adminSeed = {
   name: 'Super Admin',
   email: 'admin@userms.com',
@@ -23,7 +22,6 @@ const seed = async () => {
   try {
     await connectDB();
 
-    // Upsert admin: don't wipe existing users
     const existing = await User.findOne({ email: adminSeed.email });
     if (existing) {
       console.log('Admin already exists — skipping seed.');

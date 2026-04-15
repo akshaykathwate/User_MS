@@ -29,6 +29,15 @@ export const AuthProvider = ({ children }) => {
     loadUser();
   }, [loadUser]);
 
+  const register = async (name, email, password) => {
+    const { data } = await authAPI.register({ name, email, password });
+    const { accessToken, refreshToken, user: newUser } = data.data;
+    localStorage.setItem('accessToken', accessToken);
+    localStorage.setItem('refreshToken', refreshToken);
+    setUser(newUser);
+    return newUser;
+  };
+
   const login = async (email, password) => {
     const { data } = await authAPI.login({ email, password });
     const { accessToken, refreshToken, user: loggedInUser } = data.data;
@@ -42,7 +51,6 @@ export const AuthProvider = ({ children }) => {
     try {
       await authAPI.logout();
     } catch {
-      // Silent fail on logout error
     } finally {
       localStorage.removeItem('accessToken');
       localStorage.removeItem('refreshToken');
@@ -60,7 +68,7 @@ export const AuthProvider = ({ children }) => {
   const isAdminOrManager = isAdmin || isManager;
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, logout, refreshUser, isAdmin, isManager, isAdminOrManager }}>
+    <AuthContext.Provider value={{ user, loading, register, login, logout, refreshUser, isAdmin, isManager, isAdminOrManager }}>
       {children}
     </AuthContext.Provider>
   );

@@ -1,6 +1,7 @@
+const path = require('path');
+require('dotenv').config({ path: path.resolve(__dirname, '../../.env') });
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
-require('dotenv').config();
 
 const User = require('../models/user.model');
 
@@ -9,78 +10,32 @@ const connectDB = async () => {
   console.log('MongoDB connected for seeding...');
 };
 
-const seedUsers = [
-  {
-    name: 'Super Admin',
-    email: 'admin@userms.com',
-    password: 'Admin@123456',
-    role: 'admin',
-    status: 'active'
-  },
-  {
-    name: 'Jane Manager',
-    email: 'manager@userms.com',
-    password: 'Manager@123456',
-    role: 'manager',
-    status: 'active'
-  },
-  {
-    name: 'John Doe',
-    email: 'user@userms.com',
-    password: 'User@123456',
-    role: 'user',
-    status: 'active'
-  },
-  {
-    name: 'Alice Smith',
-    email: 'alice@userms.com',
-    password: 'User@123456',
-    role: 'user',
-    status: 'active'
-  },
-  {
-    name: 'Bob Johnson',
-    email: 'bob@userms.com',
-    password: 'User@123456',
-    role: 'user',
-    status: 'inactive'
-  },
-  {
-    name: 'Carol Williams',
-    email: 'carol@userms.com',
-    password: 'Manager@123456',
-    role: 'manager',
-    status: 'active'
-  }
-];
+// Only the admin is seeded. All other users register via POST /api/auth/register
+const adminSeed = {
+  name: 'Super Admin',
+  email: 'admin@userms.com',
+  password: 'Admin@123456',
+  role: 'admin',
+  status: 'active'
+};
 
 const seed = async () => {
   try {
     await connectDB();
 
-    // Clear existing users
-    await User.deleteMany({});
-    console.log('Cleared existing users');
+    // Upsert admin: don't wipe existing users
+    const existing = await User.findOne({ email: adminSeed.email });
+    if (existing) {
+      console.log('Admin already exists — skipping seed.');
+      process.exit(0);
+    }
 
-    // Create admin first (no createdBy reference)
-    const [adminUser] = await User.create([seedUsers[0]]);
-    console.log(`Created admin: ${adminUser.email}`);
-
-    // Create rest with createdBy set to admin
-    const restUsers = seedUsers.slice(1).map(u => ({
-      ...u,
-      createdBy: adminUser._id,
-      updatedBy: adminUser._id
-    }));
-
-    const created = await User.create(restUsers);
-    created.forEach(u => console.log(`Created ${u.role}: ${u.email}`));
+    const admin = await User.create(adminSeed);
+    console.log(`\u2713 Created admin: ${admin.email}`);
 
     console.log('\n=== SEED COMPLETE ===');
-    console.log('Login credentials:');
-    console.log('  Admin:   admin@userms.com    / Admin@123456');
-    console.log('  Manager: manager@userms.com  / Manager@123456');
-    console.log('  User:    user@userms.com     / User@123456');
+    console.log('Admin login:  admin@userms.com  /  Admin@123456');
+    console.log('All other users must self-register via the Sign Up page.');
 
     process.exit(0);
   } catch (error) {

@@ -23,7 +23,6 @@ const Layout = () => {
           <Outlet />
         </main>
       </div>
-      {/* Mobile overlay */}
       {mobileOpen && (
         <div
           style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 99 }}

@@ -129,7 +129,6 @@ const ProfilePage = () => {
         </div>
       </div>
 
-      {/* Password Change */}
       {editMode && (
         <div className="card" style={{ marginBottom: 'var(--space-6)' }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 'var(--space-4)' }}>
@@ -187,7 +186,6 @@ const ProfilePage = () => {
         </div>
       )}
 
-      {/* Actions */}
       {editMode && (
         <div style={{ display: 'flex', gap: 'var(--space-3)' }}>
           <button id="save-profile-btn" className="btn btn-primary" onClick={handleSave} disabled={loading}>
@@ -199,7 +197,6 @@ const ProfilePage = () => {
         </div>
       )}
 
-      {/* Audit Info */}
       {!editMode && (
         <div className="card">
           <h2 className="section-title">📋 Account Information</h2>

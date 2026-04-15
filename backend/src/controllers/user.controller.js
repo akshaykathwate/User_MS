@@ -1,15 +1,11 @@
 const User = require('../models/user.model');
 const bcrypt = require('bcryptjs');
 
-// Helper: Generate random password
 const generatePassword = () => {
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#$%';
   return Array.from({ length: 12 }, () => chars[Math.floor(Math.random() * chars.length)]).join('');
 };
 
-// @desc    Get all users (paginated, searchable, filterable)
-// @route   GET /api/users
-// @access  Admin, Manager
 const getAllUsers = async (req, res) => {
   try {
     const page = parseInt(req.query.page, 10) || 1;
@@ -18,7 +14,6 @@ const getAllUsers = async (req, res) => {
 
     const filter = {};
 
-    // Search by name or email
     if (req.query.search) {
       filter.$or = [
         { name: { $regex: req.query.search, $options: 'i' } },
@@ -26,17 +21,14 @@ const getAllUsers = async (req, res) => {
       ];
     }
 
-    // Filter by role
     if (req.query.role && ['admin', 'manager', 'user'].includes(req.query.role)) {
       filter.role = req.query.role;
     }
 
-    // Filter by status
     if (req.query.status && ['active', 'inactive'].includes(req.query.status)) {
       filter.status = req.query.status;
     }
 
-    // Managers cannot see admin users
     if (req.user.role === 'manager') {
       filter.role = { $ne: 'admin' };
     }
@@ -68,14 +60,10 @@ const getAllUsers = async (req, res) => {
   }
 };
 
-// @desc    Get single user
-// @route   GET /api/users/:id
-// @access  Admin, Manager, User (own profile)
 const getUserById = async (req, res) => {
   try {
     const targetId = req.params.id;
 
-    // Users can only view their own profile
     if (req.user.role === 'user' && req.user._id.toString() !== targetId) {
       return res.status(403).json({ success: false, message: 'Not authorized to view this profile' });
     }
@@ -89,7 +77,6 @@ const getUserById = async (req, res) => {
       return res.status(404).json({ success: false, message: 'User not found' });
     }
 
-    // Managers cannot view admin profiles
     if (req.user.role === 'manager' && user.role === 'admin') {
       return res.status(403).json({ success: false, message: 'Not authorized to view admin profiles' });
     }
@@ -101,15 +88,11 @@ const getUserById = async (req, res) => {
   }
 };
 
-// @desc    Create new user
-// @route   POST /api/users
-// @access  Admin only
 const createUser = async (req, res) => {
   try {
     const { name, email, role, status, autoGeneratePassword } = req.body;
     let { password } = req.body;
 
-    // Check if email already exists
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(409).json({ success: false, message: 'Email already in use' });
@@ -152,9 +135,6 @@ const createUser = async (req, res) => {
   }
 };
 
-// @desc    Update user
-// @route   PUT /api/users/:id
-// @access  Admin (all fields), Manager (non-admin users, limited), User (own profile, limited)
 const updateUser = async (req, res) => {
   try {
     const targetId = req.params.id;
@@ -165,28 +145,23 @@ const updateUser = async (req, res) => {
       return res.status(404).json({ success: false, message: 'User not found' });
     }
 
-    // Role-based update restrictions
     if (requestingUser.role === 'user') {
-      // Users can only update their own profile
       if (requestingUser._id.toString() !== targetId) {
         return res.status(403).json({ success: false, message: 'Not authorized to update this user' });
       }
-      // Users cannot change role or email
       delete req.body.role;
       delete req.body.status;
       delete req.body.email;
     }
 
     if (requestingUser.role === 'manager') {
-      // Managers cannot update admin users
       if (targetUser.role === 'admin') {
         return res.status(403).json({ success: false, message: 'Not authorized to update admin users' });
       }
-      // Managers cannot change roles to admin
       if (req.body.role === 'admin') {
         return res.status(403).json({ success: false, message: 'Managers cannot assign admin role' });
       }
-      delete req.body.email; // Managers cannot change email
+      delete req.body.email; 
     }
 
     const allowedFields = ['name', 'email', 'role', 'status'];
@@ -195,7 +170,6 @@ const updateUser = async (req, res) => {
       if (req.body[field] !== undefined) updates[field] = req.body[field];
     });
 
-    // Handle password update
     if (req.body.password) {
       const salt = await bcrypt.genSalt(12);
       updates.password = await bcrypt.hash(req.body.password, salt);
@@ -226,14 +200,10 @@ const updateUser = async (req, res) => {
   }
 };
 
-// @desc    Delete user (soft delete - deactivate)
-// @route   DELETE /api/users/:id
-// @access  Admin only
 const deleteUser = async (req, res) => {
   try {
     const targetId = req.params.id;
 
-    // Prevent self-deletion
     if (req.user._id.toString() === targetId) {
       return res.status(400).json({ success: false, message: 'You cannot delete your own account' });
     }
@@ -243,7 +213,6 @@ const deleteUser = async (req, res) => {
       return res.status(404).json({ success: false, message: 'User not found' });
     }
 
-    // Soft delete: deactivate the user
     user.status = 'inactive';
     user.updatedBy = req.user._id;
     await user.save({ validateBeforeSave: false });
@@ -259,9 +228,6 @@ const deleteUser = async (req, res) => {
   }
 };
 
-// @desc    Hard delete user
-// @route   DELETE /api/users/:id/permanent
-// @access  Admin only
 const permanentDeleteUser = async (req, res) => {
   try {
     const targetId = req.params.id;
@@ -281,9 +247,6 @@ const permanentDeleteUser = async (req, res) => {
   }
 };
 
-// @desc    Get user stats (dashboard)
-// @route   GET /api/users/stats
-// @access  Admin, Manager
 const getUserStats = async (req, res) => {
   try {
     const filter = req.user.role === 'manager' ? { role: { $ne: 'admin' } } : {};

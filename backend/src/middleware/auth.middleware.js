@@ -1,7 +1,6 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/user.model');
 
-// Protect routes - verify access token
 const protect = async (req, res, next) => {
   let token;
 
@@ -35,7 +34,6 @@ const protect = async (req, res, next) => {
   }
 };
 
-// Role-based authorization
 const authorize = (...roles) => {
   return (req, res, next) => {
     if (!roles.includes(req.user.role)) {

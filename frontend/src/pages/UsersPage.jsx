@@ -19,11 +19,10 @@ const UsersPage = () => {
   const [filters, setFilters] = useState({ search: '', role: '', status: '' });
   const [searchInput, setSearchInput] = useState('');
 
-  // Modals
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [editingUser, setEditingUser] = useState(null);
   const [deletingUser, setDeletingUser] = useState(null);
-  const [deleteType, setDeleteType] = useState('soft'); // 'soft' | 'hard'
+  const [deleteType, setDeleteType] = useState('soft');
 
   const fetchUsers = useCallback(async (page = 1) => {
     setLoading(true);
@@ -47,7 +46,6 @@ const UsersPage = () => {
     fetchUsers(1);
   }, [filters]);
 
-  // Debounced search
   useEffect(() => {
     const t = setTimeout(() => {
       setFilters(f => ({ ...f, search: searchInput }));
@@ -103,13 +101,10 @@ const UsersPage = () => {
         )}
       </div>
 
-      {/* Table */}
       <div className="table-container">
-        {/* Filters */}
         <div className="table-header">
           <div className="table-title">All Users</div>
           <div className="table-actions">
-            {/* Search */}
             <div className="search-bar">
               <span className="search-icon"><MdSearch /></span>
               <input
@@ -123,7 +118,6 @@ const UsersPage = () => {
               />
             </div>
 
-            {/* Role filter */}
             <select
               id="role-filter"
               className="filter-select"
@@ -136,7 +130,6 @@ const UsersPage = () => {
               <option value="user">User</option>
             </select>
 
-            {/* Status filter */}
             <select
               id="status-filter"
               className="filter-select"
@@ -154,7 +147,6 @@ const UsersPage = () => {
           </div>
         </div>
 
-        {/* Table Body */}
         {loading ? (
           <div className="loading-container">
             <div className="spinner" style={{ width: 36, height: 36 }} />
@@ -245,7 +237,6 @@ const UsersPage = () => {
           </div>
         )}
 
-        {/* Pagination */}
         {!loading && users.length > 0 && (
           <div className="pagination">
             <div className="pagination-info">
@@ -276,7 +267,6 @@ const UsersPage = () => {
         )}
       </div>
 
-      {/* Create/Edit Modal */}
       {(showCreateModal || editingUser) && (
         <UserFormModal
           user={editingUser}
@@ -287,7 +277,6 @@ const UsersPage = () => {
         />
       )}
 
-      {/* Delete Confirm Modal */}
       {deletingUser && (
         <ConfirmModal
           title={deleteType === 'soft' ? 'Deactivate User' : 'Permanently Delete User'}

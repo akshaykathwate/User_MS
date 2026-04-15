@@ -73,14 +73,12 @@ const UserDetailPage = () => {
 
   return (
     <div>
-      {/* Back */}
       {(isAdmin || isManager) && (
         <Link to="/users" className="btn btn-ghost btn-sm" style={{ marginBottom: 'var(--space-6)' }}>
           <MdArrowBack /> Back to Users
         </Link>
       )}
 
-      {/* Header */}
       <div className="user-detail-header">
         <div className="user-detail-avatar">{format.initials(user.name)}</div>
         <div className="user-detail-info">
@@ -110,9 +108,7 @@ const UserDetailPage = () => {
         </div>
       </div>
 
-      {/* Info Grid */}
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--space-6)' }}>
-        {/* Account Details */}
         <div className="card">
           <h2 className="section-title"><MdShield size={18} style={{ color: 'var(--color-primary)' }} /> Account Details</h2>
           <div className="info-grid">
@@ -135,7 +131,6 @@ const UserDetailPage = () => {
           </div>
         </div>
 
-        {/* Audit Info */}
         <div className="card">
           <h2 className="section-title">📋 Audit Trail</h2>
           <div className="info-grid">
@@ -179,7 +174,6 @@ const UserDetailPage = () => {
         </div>
       </div>
 
-      {/* Edit Modal */}
       {showEditModal && (
         <UserFormModal
           user={user}
@@ -190,7 +184,6 @@ const UserDetailPage = () => {
         />
       )}
 
-      {/* Deactivate Confirm */}
       {showDeactivateModal && (
         <ConfirmModal
           title="Deactivate User"
@@ -202,7 +195,6 @@ const UserDetailPage = () => {
         />
       )}
 
-      {/* Permanent Delete Confirm */}
       {showDeleteModal && (
         <ConfirmModal
           title="Permanently Delete User"

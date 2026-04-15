@@ -60,7 +60,7 @@ const UserFormModal = ({ user, isAdmin, isManager, onClose, onSaved }) => {
         if (res.data.data.generatedPassword) {
           setGeneratedPassword(res.data.data.generatedPassword);
           toast.success('User created! Note the generated password.');
-          return; // Wait for user to close manually
+          return; 
         }
         toast.success('User created successfully!');
       }
@@ -88,7 +88,6 @@ const UserFormModal = ({ user, isAdmin, isManager, onClose, onSaved }) => {
           </button>
         </div>
 
-        {/* Generated Password Display */}
         {generatedPassword && (
           <div>
             <div className="alert alert-success" style={{ marginBottom: 16 }}>
@@ -104,7 +103,6 @@ const UserFormModal = ({ user, isAdmin, isManager, onClose, onSaved }) => {
           </div>
         )}
 
-        {/* Form */}
         {!generatedPassword && (
           <form onSubmit={handleSubmit} noValidate>
             <div className="form-group">
@@ -169,7 +167,6 @@ const UserFormModal = ({ user, isAdmin, isManager, onClose, onSaved }) => {
               </div>
             )}
 
-            {/* Password section */}
             {!isEdit && (
               <div className="form-group">
                 <label className="checkbox-wrapper" style={{ marginBottom: 12 }}>

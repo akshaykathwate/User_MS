@@ -42,7 +42,6 @@ const UserSchema = new mongoose.Schema(
       type: String,
       select: false
     },
-    // Audit fields
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
@@ -61,7 +60,6 @@ const UserSchema = new mongoose.Schema(
   }
 );
 
-// Hash password before saving
 UserSchema.pre('save', async function (next) {
   if (!this.isModified('password')) return next();
   const salt = await bcrypt.genSalt(12);
@@ -69,12 +67,10 @@ UserSchema.pre('save', async function (next) {
   next();
 });
 
-// Compare password method
 UserSchema.methods.comparePassword = async function (enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
 };
 
-// Generate access token
 UserSchema.methods.generateAccessToken = function () {
   return jwt.sign(
     { id: this._id, role: this.role, name: this.name, email: this.email },
@@ -83,7 +79,6 @@ UserSchema.methods.generateAccessToken = function () {
   );
 };
 
-// Generate refresh token
 UserSchema.methods.generateRefreshToken = function () {
   return jwt.sign(
     { id: this._id },
@@ -92,8 +87,6 @@ UserSchema.methods.generateRefreshToken = function () {
   );
 };
 
-// Index for searching
-UserSchema.index({ email: 1 });
 UserSchema.index({ role: 1 });
 UserSchema.index({ status: 1 });
 UserSchema.index({ name: 'text' });

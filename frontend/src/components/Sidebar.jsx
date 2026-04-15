@@ -23,7 +23,6 @@ const Sidebar = ({ collapsed, onToggle, mobileOpen }) => {
 
   return (
     <aside className={`sidebar ${collapsed ? 'collapsed' : ''} ${mobileOpen ? 'mobile-open' : ''}`}>
-      {/* Logo */}
       <div className="sidebar-logo">
         <div className="sidebar-logo-icon">
           <MdShield />
@@ -31,7 +30,6 @@ const Sidebar = ({ collapsed, onToggle, mobileOpen }) => {
         {!collapsed && <span className="sidebar-logo-text">UserMS</span>}
       </div>
 
-      {/* Navigation */}
       <nav className="sidebar-nav">
         {!collapsed && <div className="sidebar-section-label">Navigation</div>}
 
@@ -62,9 +60,7 @@ const Sidebar = ({ collapsed, onToggle, mobileOpen }) => {
         )}
       </nav>
 
-      {/* Footer */}
       <div className="sidebar-footer">
-        {/* User info */}
         {!collapsed && (
           <div style={{ marginBottom: 8, padding: '8px 12px', borderRadius: 10, background: 'var(--color-surface-2)' }}>
             <div style={{ fontSize: 'var(--text-sm)', fontWeight: 600, color: 'var(--text-primary)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{user?.name}</div>

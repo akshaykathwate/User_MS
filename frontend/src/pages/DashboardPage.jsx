@@ -41,7 +41,6 @@ const DashboardPage = () => {
         </p>
       </div>
 
-      {/* Stats Grid — Admin/Manager only */}
       {isAdminOrManager && (
         <>
           {loading ? (
@@ -120,7 +119,6 @@ const DashboardPage = () => {
                 </Link>
               </div>
 
-              {/* Recent Users */}
               {stats?.recentUsers?.length > 0 && (
                 <div className="card">
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--space-5)' }}>
@@ -154,7 +152,6 @@ const DashboardPage = () => {
         </>
       )}
 
-      {/* Regular User Dashboard */}
       {!isAdminOrManager && (
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--space-6)', maxWidth: 600 }}>
           <Link to="/profile" className="card" style={{ textDecoration: 'none', cursor: 'pointer' }}>

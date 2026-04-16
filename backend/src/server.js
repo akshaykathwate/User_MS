@@ -23,13 +23,33 @@ const limiter = rateLimit({
 });
 app.use('/api/', limiter);
 
-// CORS
+// CORS — dynamic origin allowlist so env-var changes never need a code redeploy
+const allowedOrigins = [
+  'http://localhost:5173',
+  'http://localhost:5174',
+  'https://user-ms-one.vercel.app',
+  process.env.FRONTEND_URL, // set in Render dashboard
+].filter(Boolean); // removes undefined if env var is missing
+
 app.use(cors({
-  origin: [process.env.FRONTEND_URL || 'http://localhost:5173', 'https://user-management-frontend.vercel.app'],
+  origin: function (origin, callback) {
+    // Allow server-to-server / Postman requests (no origin header)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      console.warn(`CORS blocked request from: ${origin}`);
+      callback(new Error(`CORS policy: origin ${origin} is not allowed`));
+    }
+  },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  optionsSuccessStatus: 200 // Required for IE11 preflight compatibility
 }));
+
+// Explicit OPTIONS preflight handler for all routes
+app.options('*', cors());
 
 // Body parser
 app.use(express.json({ limit: '10kb' }));
